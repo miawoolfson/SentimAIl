@@ -1,0 +1,6 @@
+{
+    "DATASET": "enron_sentiment_full.parquet",
+    "MAX_TOKEN_LENGTH": 512,
+    "LEARNING_RATE": 2e-05,
+    "DROPOUT_PROB": 0.2
+}
