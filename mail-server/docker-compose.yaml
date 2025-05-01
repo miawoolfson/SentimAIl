@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  postfix:
+    image: postfix-custom
+    build:
+      context: ./postfix
+    container_name: postfix
+    hostname: sentimail.local
+    ports:
+      - "25:25"
+    volumes:
+      - postfix-spool:/var/spool/postfix
+      - maildata:/var/mail
+
+  dovecot:
+    build:
+      context: ./dovecot
+    container_name: dovecot
+    ports:
+      - "143:143"
+    volumes:
+      - postfix-spool:/var/spool/postfix
+      - maildata:/var/mail
+
+  rainloop:
+    image: hardware/rainloop
+    container_name: rainloop
+    ports:
+      - "8888:8888"
+    volumes:
+      - rainloop_data:/rainloop/data
+
+volumes:
+  postfix-spool:
+  maildata:
+  rainloop_data:
