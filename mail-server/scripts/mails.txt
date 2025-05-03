@@ -1,0 +1,14 @@
+testuser@sentimail.local:testpass
+adam@sentimail.local:adam
+mia@sentimail.local:mia
+tal@sentimail.local:tal
+gal.shirizli@sentimail.local:gal
+madarnatan@sentimail.local:natan
+miawoolfson@sentimail.local:mia
+adibrodeski01@sentimail.local:adi
+gal@sentimail.local:galpass
+natan@sentimail.local:galpass
+try@sentimail.local:galpass
+try2@sentimail.local:galpass
+try3@sentimail.local:galpass
+try4@sentimail.local:galpass
