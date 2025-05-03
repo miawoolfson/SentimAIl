@@ -1,0 +1,10 @@
+From,To,Subject,Body
+natan@sentimail.local,adam@sentimail.local,Test CSV,"Hi, I'm testing the CSV"
+try@sentimail.local,mia@sentimail.local,Test CSV,"Hi, I'm testing the CSV"
+try4@sentimail.local,adibrodeski01@sentimail.local,Test CSV,"Hi, I'm testing the CSV"
+tal@sentimail.local,gal@sentimail.local,Test CSV,"Hi, I'm testing the CSV"
+adam@sentimail.local,try3@sentimail.local,Test CSV,"Hi, I'm testing the CSV"
+mia@sentimail.local,natan@sentimail.local,Test CSV,"Hi, I'm testing the CSV"
+adibrodeski01@sentimail.local,try@sentimail.local,Test CSV,"Hi, I'm testing the CSV"
+gal@sentimail.local,try4@sentimail.local,Test CSV,"Hi, I'm testing the CSV"
+try3@sentimail.local,tal@sentimail.local,Test CSV,"Hi, I'm testing the CSV"

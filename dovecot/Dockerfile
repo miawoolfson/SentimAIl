@@ -1,15 +1,3 @@
-# FROM debian:bullseye-slim
-
-# RUN apt-get update && \
-#     apt-get install -y dovecot-core dovecot-imapd && \
-#     useradd -m testuser && echo 'testuser:testpass' | chpasswd && \
-#     mkdir -p /var/mail/testuser/Maildir && \
-#     chown -R testuser: /var/mail/testuser && \
-#     apt-get clean
-
-# COPY config/dovecot.conf /etc/dovecot/dovecot.conf
-
-# CMD ["dovecot", "-F"]
 FROM debian:bullseye
 
 RUN apt-get update && \
