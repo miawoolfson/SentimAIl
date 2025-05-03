@@ -1,6 +1,7 @@
 import csv
 import smtplib
 import time
+import uuid
 import imaplib
 from email.message import EmailMessage
 from email.utils import formatdate
@@ -41,7 +42,7 @@ def send_emails_from_csv(csv_path='./mails-list.csv', smtp_host='localhost', smt
                 msg['From'] = sender
                 msg['To'] = recipient
                 msg['Date'] = formatdate(localtime=True)
-
+                msg['Message-ID'] = f"<{uuid.uuid4()}@{@sentimail.local}>"
                 # Send the message
                 server.send_message(msg)
                 print(f"Sent email: from {sender} to {recipient} subject {subject}")

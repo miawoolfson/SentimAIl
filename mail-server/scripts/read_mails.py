@@ -3,6 +3,7 @@ import email
 from datetime import datetime, timedelta
 from email.utils import parsedate_to_datetime, formatdate  # RFC date parser
 import csv
+import psycopg2
 
 
 HOST = 'localhost'
@@ -12,6 +13,9 @@ ADMIN_USER = 'admin@sentimail.local'
 ADMIN_PASS = 'adminpass'
 
 
+def get_tag(msg_body):
+    return "neutral"
+
 def print_mail(msg):
     # Print only the new mails
         print("--------------------------------")
@@ -19,23 +23,27 @@ def print_mail(msg):
         print("To:", msg["To"])
         print("Subject:", msg["Subject"])
         print("Date:", msg["Date"])
-        # Get and print body
-        body = ""
-        if msg.is_multipart():
-            for part in msg.walk():
-                content_type = part.get_content_type()
-                content_disposition = str(part.get("Content-Disposition"))
-                if content_type == "text/plain" and "attachment" not in content_disposition:
-                    payload = part.get_payload(decode=True)
-                    if payload:
-                        body = payload.decode(errors='replace')
-                        break
-        else:
-            payload = msg.get_payload(decode=True)
-            if payload:
-                body = payload.decode(errors='replace')
-        print("Body:", body)
+        print("Message ID:", msg["Message-ID"])
+        print("Tag:", get_tag(msg["Body"]))
+        print("Body:", get_body(msg))
         print("--------------------------------")
+
+def get_body(msg):
+    body = ""
+    if msg.is_multipart():
+        for part in msg.walk():
+            content_type = part.get_content_type()
+            content_disposition = str(part.get("Content-Disposition"))
+            if content_type == "text/plain" and "attachment" not in content_disposition:
+                payload = part.get_payload(decode=True)
+                if payload:
+                    body = payload.decode(errors='replace')
+                    break
+    else:
+        payload = msg.get_payload(decode=True)
+        if payload:
+            body = payload.decode(errors='replace')
+    return body
 
 # Utility to compute how long ago the message was sent
 def time_since(dt):
@@ -76,10 +84,11 @@ def get_recent_mails(mail):
         # Compute how long ago the mail was sent
         delta = time_since(dt)
         # Skip mails older than 2 minutes
-        if delta > timedelta(minutes=5):
+        if delta > timedelta(minutes=10):
             continue
 
         print_mail(msg)
+        add_mail_to_db(msg)
 
 def main():
     users = get_all_users()
@@ -106,9 +115,46 @@ def all_mail():
         mail.logout()
 
 
+def add_mail_to_db(msg):
+    DB_CONFIG = {
+        'dbname': 'postgres',
+        'user': 'postgres',
+        'password': 'mysecretpassword',
+        'host': 'localhost',
+        'port': 5432  # Default PostgreSQL port
+    }
+    conn = None
+    try:
+        # Connect to the database
+        conn = psycopg2.connect(**DB_CONFIG)
+        cur = conn.cursor()
+
+        # Insert the email data
+        cur.execute("""
+            INSERT INTO emails (sender, recipient, sent_at, subject, body, sentiment_tag)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (
+            msg['From'],
+            msg['To'],
+            msg['Date'],
+            msg['Subject'],
+            get_body(msg),
+            get_tag(get_body(msg))
+        ))
+
+        conn.commit()
+        print("Email inserted successfully.")
+
+    except Exception as e:
+        print("Error:", e)
+
+    finally:
+        if conn:
+            cur.close()
+            conn.close()
+
+
+
 
 if __name__ == "__main__":
-    # add_csv_mails()
-    # read_csv_mails()
-    # all_mail()
     main()
