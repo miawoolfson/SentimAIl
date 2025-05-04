@@ -54,21 +54,22 @@
     overflow: hidden;
     height: 500px;
     position: relative;
+    margin-bottom: 1rem;
   }
   
   .loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-  }
-  
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
   .loading-spinner {
     width: 50px;
     height: 50px;
@@ -89,4 +90,11 @@
     height: 100%;
     border: none;
   }
+  .dashboard-info {
+  background-color: #f0f4f8;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
   </style>

@@ -1,19 +1,19 @@
-// components/Navbar.vue
 <template>
   <nav class="navbar">
     <div class="logo">
       <i class="fas fa-brain"></i>
-      <span>AI Insights</span>
+      <span>Sentimail - AI Insights</span>
     </div>
     <div class="nav-links">
       <router-link to="/" class="nav-link" exact>Dashboard</router-link>
-      <router-link to="/reports" class="nav-link">Reports</router-link>
+      <router-link to="/alerts" class="nav-link">Alerts</router-link>
       <router-link to="/analytics" class="nav-link">Analytics</router-link>
       <router-link to="/settings" class="nav-link">Settings</router-link>
     </div>
     <div class="user-actions">
-      <button class="btn btn-icon" title="Notifications">
-        <i class="fas fa-bell"></i>
+      <button class="btn btn-icon" title="Notifications" @click="goToAlerts">
+        <i class="fas fa-bell" :class="{ 'has-notifications': hasUnreadNotifications }"></i>
+        <span v-if="unreadCount > 0" class="notification-badge">{{ unreadCount }}</span>
       </button>
       <button class="btn btn-icon" title="Help">
         <i class="fas fa-question-circle"></i>
@@ -27,14 +27,64 @@
 
 <script>
 export default {
-  name: 'AppNavbar'
+  name: 'AppNavbar',
+  data() {
+    return {
+      hasUnreadNotifications: false,
+      unreadCount: 0,
+      notifications: []
+    }
+  },
+  methods: {
+  goToAlerts() {
+    this.$router.push('/alerts');
+  },
+  checkForNewNotifications() {
+    // Simulate new notifications every 30 seconds
+    this.notificationInterval = setInterval(() => {
+      const newNotification = {
+        id: Date.now(),
+        title: 'New Alert',
+        message: 'This is a simulated alert notification.',
+        timestamp: new Date(),
+        read: false
+      };
+      
+      this.notifications.push(newNotification);
+      this.hasUnreadNotifications = true;
+      this.unreadCount = this.notifications.filter(n => !n.read).length;
+    }, 30000); // 30 seconds
+  }
+  },
+  mounted() {
+    this.checkForNewNotifications();
+    
+    // Add initial notification to test
+    setTimeout(() => {
+      const newNotification = {
+        id: Date.now(),
+        title: 'Welcome Alert',
+        message: 'Welcome to the AI Insights Dashboard! This is your first alert.',
+        timestamp: new Date(),
+        read: false
+      };
+      
+      this.notifications.push(newNotification);
+      this.hasUnreadNotifications = true;
+      this.unreadCount = 1;  
+    }, 2000); // 2 seconds after mounting
+  },
+  beforeUnmount() {
+    // Clear interval when component is destroyed
+    clearInterval(this.notificationInterval);
+  }
 }
 </script>
 
 <style scoped>
 .navbar {
   background-color: white;
-  box-shadow: 0 2px 4px var(--shadow);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 0.75rem 2rem;
   display: flex;
   justify-content: space-between;
@@ -100,6 +150,7 @@ export default {
   font-size: 1.25rem;
   padding: 0.5rem;
   border-radius: 50%;
+  position: relative;
 }
 
 .user-profile {
@@ -114,18 +165,41 @@ export default {
   font-weight: bold;
 }
 
-@media (max-width: 768px) {
-  .navbar {
-    padding: 0.75rem 1rem;
-    flex-wrap: wrap;
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #E53E3E;
+  color: white;
+  font-size: 0.7rem;
+  min-width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.25rem;
+  font-weight: bold;
+}
+
+.btn-icon {
+  position: relative;
+}
+
+.has-notifications {
+  color: #3366CC !important; /* Dark blue color for notifications */
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
   }
-  
-  .nav-links {
-    order: 3;
-    width: 100%;
-    justify-content: space-around;
-    margin-top: 0.75rem;
-    gap: 0.5rem;
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
   }
 }
 </style>
