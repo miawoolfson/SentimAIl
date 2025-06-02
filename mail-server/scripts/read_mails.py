@@ -88,7 +88,7 @@ def get_recent_mails(mail):
             continue
 
         print_mail(msg)
-        add_mail_to_db(msg)
+        # add_mail_to_db(msg)
 
 def main():
     users = get_all_users()
