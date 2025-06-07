@@ -13,7 +13,10 @@ ADMIN_USER = 'admin@sentimail.local'
 ADMIN_PASS = 'adminpass'
 
 
-def get_tag(msg_body):
+def get_sentiment_tag(msg_body):
+    return "neutral"
+
+def get_subject_tag(msg_body):
     return "neutral"
 
 def print_mail(msg):
@@ -24,7 +27,8 @@ def print_mail(msg):
         print("Subject:", msg["Subject"])
         print("Date:", msg["Date"])
         print("Message ID:", msg["Message-ID"])
-        print("Tag:", get_tag(msg["Body"]))
+        print("Sentiment Tag:", get_sentiment_tag(msg["Body"]))
+        print("Subject Tag:", get_subject_tag(msg["Body"]))
         print("Body:", get_body(msg))
         print("--------------------------------")
 
@@ -139,7 +143,8 @@ def add_mail_to_db(msg):
             msg['Date'],
             msg['Subject'],
             get_body(msg),
-            get_tag(get_body(msg))
+            get_sentiment_tag(get_body(msg)),
+            get_subject_tag(msg)
         ))
 
         conn.commit()
