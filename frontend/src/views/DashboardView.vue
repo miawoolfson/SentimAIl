@@ -20,9 +20,9 @@
   export default {
     name: 'DashboardView',
     data() {
-      return {
+      return {  
         isLoading: true,
-        grafanaUrl: 'http://localhost:3000/d/aek4uq17b318gc/mias?orgId=1&from=now-6h&to=now&timezone=browser&refresh=10s&editPanel=1'
+        grafanaUrl: 'http://sentimail.cs.colman.ac.il:3000/public-dashboards/16a10e29762c4af9ace225811bc12c75'
     }
     },
     methods: {
