@@ -4,6 +4,8 @@ from datetime import datetime, timedelta
 from email.utils import parsedate_to_datetime, formatdate  # RFC date parser
 import csv
 import psycopg2
+import os
+import requests
 
 
 HOST = 'localhost'
@@ -14,10 +16,46 @@ ADMIN_PASS = 'adminpass'
 
 
 def get_sentiment_tag(msg_body):
-    return "neutral"
+    try:
+        response = requests.post(
+            "http://localhost:5000/sentiment",
+            json={"text": msg_body},
+            headers={"Content-Type": "application/json"},
+            timeout=3
+        )
+        response.raise_for_status()
+        sentiment = response.json().get("sentiment")
+        if sentiment is None:
+            raise ValueError("Sentiment API returned no sentiment value")
+        return sentiment
+    except requests.exceptions.Timeout:
+        raise RuntimeError("Sentiment API request timed out - service may be down")
+    except requests.exceptions.RequestException as e:
+        raise RuntimeError(f"Sentiment API request failed: {str(e)}")
+    except Exception as e:
+        raise RuntimeError(f"Unexpected error in sentiment analysis: {str(e)}")
+
 
 def get_subject_tag(msg_body):
-    return "neutral"
+    try:
+        response = requests.post(
+            "http://localhost:5000/subject",
+            json={"text": msg_body},
+            headers={"Content-Type": "application/json"},
+            timeout=3
+        )
+        response.raise_for_status()
+        subject = response.json().get("subject")
+        if subject is None:
+            raise ValueError("Subject API returned no subject value")
+        return subject
+    except requests.exceptions.Timeout:
+        raise RuntimeError("Subject API request timed out - service may be down")
+    except requests.exceptions.RequestException as e:
+        raise RuntimeError(f"Subject API request failed: {str(e)}")
+    except Exception as e:
+        raise RuntimeError(f"Unexpected error in subject analysis: {str(e)}")
+
 
 def print_mail(msg):
     # Print only the new mails
@@ -31,6 +69,7 @@ def print_mail(msg):
         print("Subject Tag:", get_subject_tag(msg["Body"]))
         print("Body:", get_body(msg))
         print("--------------------------------")
+
 
 def get_body(msg):
     body = ""
@@ -48,6 +87,7 @@ def get_body(msg):
         if payload:
             body = payload.decode(errors='replace')
     return body
+
 
 # Utility to compute how long ago the message was sent
 def time_since(dt):
@@ -68,6 +108,7 @@ def get_all_users(user_file='./scripts/mails.txt'):
             email_addr = line.split(':', 1)[0]
             users.append(email_addr)
     return users
+
 
 def get_recent_mails(mail):
     typ, data = mail.search(None, 'ALL')  # fetch all messages
@@ -94,36 +135,12 @@ def get_recent_mails(mail):
         print_mail(msg)
         add_mail_to_db(msg)
 
-def main():
-    users = get_all_users()
-    for user in users:
-        mail = imaplib.IMAP4(HOST, PORT)
-        mail.login(f"{user}*{ADMIN_USER}", ADMIN_PASS)
-        mail.select('INBOX')
-        get_recent_mails(mail)
-        mail.logout()
-
-def all_mail():
-    """Read and print all mails for every user in users file."""
-    users = get_all_users()
-    for user in users:
-        mail = imaplib.IMAP4(HOST, PORT)
-        mail.login(f"{user}*{ADMIN_USER}", ADMIN_PASS)
-        mail.select('INBOX')
-        typ, data = mail.search(None, 'ALL')
-        for num in data[0].split():
-            typ, msg_data = mail.fetch(num, '(RFC822)')
-            raw_email = msg_data[0][1]
-            msg = email.message_from_bytes(raw_email)
-            print_mail(msg)
-        mail.logout()
-
 
 def add_mail_to_db(msg):
     DB_CONFIG = {
         'dbname': 'postgres',
         'user': 'postgres',
-        'password': 'mysecretpassword',
+        'password': os.environ.get('DB_PASSWORD', ''),  # Get password from environment variable
         'host': 'localhost',
         'port': 5432  # Default PostgreSQL port
     }
@@ -135,8 +152,8 @@ def add_mail_to_db(msg):
 
         # Insert the email data
         cur.execute("""
-            INSERT INTO emails (sender, recipient, sent_at, subject, body, sentiment_tag)
-            VALUES (%s, %s, %s, %s, %s, %s)
+            INSERT INTO emails (sender, recipient, sent_at, subject, body, sentiment_tag, subject_tag)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
         """, (
             msg['From'],
             msg['To'],
@@ -144,7 +161,7 @@ def add_mail_to_db(msg):
             msg['Subject'],
             get_body(msg),
             get_sentiment_tag(get_body(msg)),
-            get_subject_tag(msg)
+            get_subject_tag(get_body(msg))
         ))
 
         conn.commit()
@@ -159,7 +176,23 @@ def add_mail_to_db(msg):
             conn.close()
 
 
+def main():
+    try:
+        users = get_all_users()
+        for user in users:
+            mail = imaplib.IMAP4(HOST, PORT)
+            mail.login(f"{user}*{ADMIN_USER}", ADMIN_PASS)
+            mail.select('INBOX')
+            get_recent_mails(mail)
+            mail.logout()
+    except Exception as e:
+        print(f"Fatal error: {str(e)}")
+        raise  # Re-raise the exception to stop the script
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        print(f"Script stopped due to error: {str(e)}")
+        exit(1)  # Exit with error code 1
