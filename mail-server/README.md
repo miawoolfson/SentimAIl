@@ -109,7 +109,9 @@ user2@sentimail.local,user3@sentimail.local,Test,This is another email.
 
 Usage:
 ```bash
-python [scripts/send_mails.py](./scripts/send_mails.py)
+python3 -m venv venv
+source venv/bin/activate 
+python3 [scripts/send_mails.py](./scripts/send_mails.py)
 ```
 - `csv_path` (default: [`./mails-list.csv`](./mails-list.csv))
 
@@ -117,9 +119,17 @@ python [scripts/send_mails.py](./scripts/send_mails.py)
 
 You can fetch and display recent mails for all virtual users using the `scripts/read_mails.py` script. It logs in to each user's INBOX via IMAP proxy, retrieves messages sent in the last 5 minutes, and prints the message headers and body.
 
+Before running the script, set the database password as an environment variable:
+```bash
+export DB_PASSWORD='your_database_password'
+```
+
 Usage:
 ```bash
-python [scripts/read_mails.py](./scripts/read_mails.py)
+python3 -m venv venv
+source venv/bin/activate 
+pip3 install -r ./scripts/requirements.txt
+python3 [scripts/read_mails.py](./scripts/read_mails.py)
 ```
 
 To list all messages regardless of time, edit the script to call the `all_mail()` function instead of `main()`.
