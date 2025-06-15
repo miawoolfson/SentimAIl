@@ -11,7 +11,7 @@ This Flask-based API provides two classification endpoints using BERT models:
 python3 -m venv venv-api
 source venv-api/bin/activate
 pip3 install -r requirements.txt
-python3 app.py
+python3 classifier_api.py
 ```
 
 The server will start on port 5050.
