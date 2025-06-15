@@ -111,7 +111,7 @@ Usage:
 ```bash
 python3 -m venv venv
 source venv/bin/activate 
-python3 [scripts/send_mails.py](./scripts/send_mails.py)
+python3 ./scripts/send_mails.py
 ```
 - `csv_path` (default: [`./mails-list.csv`](./mails-list.csv))
 
@@ -129,7 +129,7 @@ Usage:
 python3 -m venv venv
 source venv/bin/activate 
 pip3 install -r ./scripts/requirements.txt
-python3 [scripts/read_mails.py](./scripts/read_mails.py)
+python3 ./scripts/read_mails.py
 ```
 
 To list all messages regardless of time, edit the script to call the `all_mail()` function instead of `main()`.
