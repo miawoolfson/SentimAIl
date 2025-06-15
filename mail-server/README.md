@@ -109,8 +109,8 @@ user2@sentimail.local,user3@sentimail.local,Test,This is another email.
 
 Usage:
 ```bash
-python3 -m venv venv
-source venv/bin/activate 
+python3 -m venv venv-send-mails
+source venv-send-mails/bin/activate 
 python3 ./scripts/send_mails.py
 ```
 - `csv_path` (default: [`./mails-list.csv`](./mails-list.csv))
@@ -126,8 +126,8 @@ export DB_PASSWORD='your_database_password'
 
 Usage:
 ```bash
-python3 -m venv venv
-source venv/bin/activate 
+python3 -m venv venv-read-mails
+source venv-read-mails/bin/activate 
 pip3 install -r ./scripts/requirements.txt
 python3 ./scripts/read_mails.py
 ```

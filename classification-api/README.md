@@ -6,21 +6,15 @@ This Flask-based API provides two classification endpoints using BERT models:
 
 ## Setup
 
-1. Install the required dependencies:
+1. Run:
 ```bash
-pip install -r requirements.txt
+python3 -m venv venv-api
+source venv-api/bin/activate
+pip3 install -r requirements.txt
+python3 app.py
 ```
 
-2. Ensure your model files are in the correct directories:
-   - Sentiment model: `sentiment/` directory
-   - Subject model: `subject/` directory
-   - Class mappings: `sentiment/mapped_classes.pkl` and `subject/mapped_classes.pkl`
-
-3. Run the Flask application:
-```bash
-python app.py
-```
-The server will start on port 5000.
+The server will start on port 5050.
 
 ## API Endpoints
 
@@ -28,7 +22,7 @@ The server will start on port 5000.
 **Endpoint:** `/sentiment`  
 **Method:** POST  
 **Content-Type:** application/json  
-**URL:** `http://localhost:5000/sentiment`
+**URL:** `http://localhost:5050/sentiment`
 
 **Request Body:**
 ```json
@@ -48,7 +42,7 @@ The server will start on port 5000.
 **Endpoint:** `/subject`  
 **Method:** POST  
 **Content-Type:** application/json  
-**URL:** `http://localhost:5000/subject`
+**URL:** `http://localhost:5050/subject`
 
 **Request Body:**
 ```json
@@ -70,14 +64,14 @@ The server will start on port 5000.
 
 1. Sentiment Analysis:
 ```bash
-curl -X POST http://localhost:5000/sentiment \
+curl -X POST http://localhost:5050/sentiment \
      -H "Content-Type: application/json" \
      -d '{"text": "I am very happy with the service!"}'
 ```
 
 2. Subject Classification:
 ```bash
-curl -X POST http://localhost:5000/subject \
+curl -X POST http://localhost:5050/subject \
      -H "Content-Type: application/json" \
      -d '{"text": "Please schedule a meeting about the Q4 business strategy."}'
 ```
@@ -88,7 +82,7 @@ curl -X POST http://localhost:5000/subject \
 import requests
 import json
 
-base_url = "http://localhost:5000"
+base_url = "http://localhost:5050"
 
 # Sentiment analysis
 sentiment_response = requests.post(

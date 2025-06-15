@@ -18,7 +18,7 @@ ADMIN_PASS = 'adminpass'
 def get_sentiment_tag(msg_body):
     try:
         response = requests.post(
-            "http://localhost:5000/sentiment",
+            "http://localhost:5050/sentiment",
             json={"text": msg_body},
             headers={"Content-Type": "application/json"},
             timeout=3
@@ -39,7 +39,7 @@ def get_sentiment_tag(msg_body):
 def get_subject_tag(msg_body):
     try:
         response = requests.post(
-            "http://localhost:5000/subject",
+            "http://localhost:5050/subject",
             json={"text": msg_body},
             headers={"Content-Type": "application/json"},
             timeout=3
