@@ -194,9 +194,7 @@ def main():
 
 if __name__ == "__main__":
     try:
-        # main()
-        print(get_sentiment_tag("Hello, how are you?"))
-        print(get_subject_tag("Hello, how are you?"))
+        main()
     except Exception as e:
         print(f"Script stopped due to error: {str(e)}")
         exit(1)  # Exit with error code 1
