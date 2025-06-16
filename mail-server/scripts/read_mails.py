@@ -65,6 +65,8 @@ def print_mail(msg):
         print("Subject:", msg["Subject"])
         print("Date:", msg["Date"])
         print("Message ID:", msg["Message-ID"])
+        print("get_body(msg):", get_body(msg))
+        print("msg['Body']:", msg["Body"])
         print("Sentiment Tag:", get_sentiment_tag(msg["Body"]))
         print("Subject Tag:", get_subject_tag(msg["Body"]))
         print("Body:", get_body(msg))
