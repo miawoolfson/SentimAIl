@@ -152,7 +152,7 @@ def add_mail_to_db(msg):
 
         # Insert the email data
         cur.execute("""
-            INSERT INTO emails (sender, recipient, sent_at, subject, body, sentiment_tag, subject_tag)
+            INSERT INTO emails_etl (sender, recipient, sent_at, subject, body, sentiment_tag, subject_tag)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
         """, (
             msg['From'],
