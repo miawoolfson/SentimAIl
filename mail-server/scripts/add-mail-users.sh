@@ -11,6 +11,10 @@ if [[ ! -f "$USER_FILE" ]]; then
   exit 1
 fi
 
+# Determine script directory and project root directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
 added_any=0
 
 while IFS=: read -r EMAIL PASSWORD || [[ -n "$EMAIL" ]]; do
@@ -21,7 +25,7 @@ while IFS=: read -r EMAIL PASSWORD || [[ -n "$EMAIL" ]]; do
     echo "Adding $EMAIL to Postfix..."
     docker-compose exec -T postfix sh -c \
       "echo '$EMAIL $EMAIL' >> /etc/postfix/vmailbox && postmap /etc/postfix/vmailbox" < /dev/null
-    echo "$EMAI $EMAILL" >> ../postfix/config/vmailbox 
+    echo "$EMAIL $EMAIL" >> "$ROOT_DIR/postfix/config/vmailbox"
     added_any=1
   else
     echo "$EMAIL already exists in Postfix, skipping"
@@ -32,7 +36,7 @@ while IFS=: read -r EMAIL PASSWORD || [[ -n "$EMAIL" ]]; do
     echo "Adding $EMAIL to Dovecot..."
     docker-compose exec -T dovecot sh -c \
       "echo '$EMAIL:{PLAIN}$PASSWORD' >> /etc/dovecot/users && chown vmail:vmail /etc/dovecot/users" < /dev/null
-    echo "$EMAIL $PASSWORD" >> ../dovecot/config/users
+    echo "$EMAIL:{PLAIN}$PASSWORD" >> "$ROOT_DIR/dovecot/config/users"
     added_any=1
   else
     echo "$EMAIL already exists in Dovecot, skipping"
