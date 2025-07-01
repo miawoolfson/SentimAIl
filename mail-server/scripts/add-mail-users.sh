@@ -25,7 +25,11 @@ while IFS=: read -r EMAIL PASSWORD || [[ -n "$EMAIL" ]]; do
     echo "Adding $EMAIL to Postfix..."
     docker-compose exec -T postfix sh -c \
       "echo '$EMAIL $EMAIL' >> /etc/postfix/vmailbox && postmap /etc/postfix/vmailbox" < /dev/null
+<<<<<<< HEAD
     echo "$EMAIL $EMAIL" >> "$ROOT_DIR/postfix/config/vmailbox"
+=======
+    echo "$EMAI $EMAILL" >> ../postfix/config/vmailbox 
+>>>>>>> main
     added_any=1
   else
     echo "$EMAIL already exists in Postfix, skipping"
@@ -36,7 +40,11 @@ while IFS=: read -r EMAIL PASSWORD || [[ -n "$EMAIL" ]]; do
     echo "Adding $EMAIL to Dovecot..."
     docker-compose exec -T dovecot sh -c \
       "echo '$EMAIL:{PLAIN}$PASSWORD' >> /etc/dovecot/users && chown vmail:vmail /etc/dovecot/users" < /dev/null
+<<<<<<< HEAD
     echo "$EMAIL:{PLAIN}$PASSWORD" >> "$ROOT_DIR/dovecot/config/users"
+=======
+    echo "$EMAIL $PASSWORD" >> ../dovecot/config/users
+>>>>>>> main
     added_any=1
   else
     echo "$EMAIL already exists in Dovecot, skipping"

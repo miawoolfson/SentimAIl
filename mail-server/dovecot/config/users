@@ -11,6 +11,10 @@ natan@sentimail.local:{PLAIN}galpass
 try@sentimail.local:{PLAIN}galpass
 try2@sentimail.local:{PLAIN}galpass
 try3@sentimail.local:{PLAIN}galpass
+<<<<<<< HEAD
 try4@sentimail.local:{PLAIN}galpass
 try5@sentimail.local:{PLAIN}galpass
 try6@sentimail.local:{PLAIN}galpass
+=======
+try4@sentimail.local:{PLAIN}galpass
+>>>>>>> main

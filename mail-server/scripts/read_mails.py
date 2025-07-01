@@ -88,7 +88,6 @@ def get_body(msg):
             body = payload.decode(errors='replace')
     return body
 
-
 # Utility to compute how long ago the message was sent
 def time_since(dt):
     """Return a timedelta representing the difference between now and dt."""
@@ -108,7 +107,6 @@ def get_all_users(user_file='./scripts/mails.txt'):
             email_addr = line.split(':', 1)[0]
             users.append(email_addr)
     return users
-
 
 def get_recent_mails(mail):
     typ, data = mail.search(None, 'ALL')  # fetch all messages
