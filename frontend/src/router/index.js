@@ -13,14 +13,14 @@ const routes = [
     component: () => import('../views/AlertsView.vue')
   },
   {
-    path: '/analytics',
-    name: 'analytics',
-    component: () => import('../views/AnalyticsView.vue')
+    path: '/sentiment-analysis',
+    name: 'sentiment-analysis',
+    component: () => import('../views/SentimentAnalysisView.vue')
   },
   {
-    path: '/settings',
-    name: 'settings',
-    component: () => import('../views/SettingsView.vue')
+    path: '/subjects',
+    name: 'subjects',
+    component: () => import('../views/SubjectsView.vue')
   }
 ]
 
