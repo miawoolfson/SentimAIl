@@ -7,8 +7,8 @@
     <div class="nav-links">
       <router-link to="/" class="nav-link" exact>Dashboard</router-link>
       <router-link to="/alerts" class="nav-link">Alerts</router-link>
-      <router-link to="/analytics" class="nav-link">Analytics</router-link>
-      <router-link to="/settings" class="nav-link">Settings</router-link>
+      <router-link to="/sentiment-analysis" class="nav-link">Sentiment Analysis</router-link>
+      <router-link to="/subjects" class="nav-link">Subjects</router-link>
     </div>
     <div class="user-actions">
       <button class="btn btn-icon" title="Notifications" @click="goToAlerts">

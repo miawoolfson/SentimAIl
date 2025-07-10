@@ -1,7 +1,7 @@
 // components/Footer.vue
 <template>
   <footer class="footer">
-    <p><span class="tagline">Turn communications into strategic insights.</span></p>
+    <p><span class="tagline">From Emails to Insights. Instantly.</span></p>
   </footer>
 </template>
 
