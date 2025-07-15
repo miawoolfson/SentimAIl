@@ -80,13 +80,17 @@ class SuperSimpleService {
     console.log('🚨 SHOWING POPUP for email:', email.id);
     
     // Simple alert popup
-    alert(`🚨 NEGATIVE SENTIMENT ALERT!\n\nSubject: ${email.subject}\nFrom: ${email.sender}\nTime: ${email.created_at}`);
+    alert(`🚨 NEGATIVE SENTIMENT ALERT!\n\nSubject: ${email.subject}\nFrom: ${email.sender}\nTime: ${email.insert_time}`);
     
-    // Also try browser notification
+    // Also try browser notification with custom title
     if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification('Negative Sentiment Alert', {
-        body: `${email.subject} from ${email.sender}`,
-        icon: '/favicon.ico'
+      new Notification('🚨 Sentimail Alert', {
+        body: `Negative sentiment: "${email.subject}" from ${email.sender}`,
+        icon: '/favicon.svg', // Use your new brain icon
+        badge: '/favicon.svg',
+        tag: 'sentiment-alert', // Prevents duplicate notifications
+        requireInteraction: false,
+        silent: false
       });
     }
   }

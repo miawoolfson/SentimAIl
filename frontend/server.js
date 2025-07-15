@@ -47,11 +47,11 @@ app.get('/api/negative-sentiment', async (req, res) => {
     console.log('✅ Database connected successfully');
     
     const query = `
-      SELECT id, subject, sender, sentiment_tag, created_at
-      FROM public.emails_etl
+      SELECT id, subject, sender, sentiment_tag, insert_time
+      FROM public.tagged_mails
       WHERE sentiment_tag = 'negative'
-      AND created_at > NOW() - INTERVAL '15 seconds'
-      ORDER BY created_at DESC
+      AND insert_time > NOW() - INTERVAL '15 seconds'
+      ORDER BY insert_time DESC
       LIMIT 10
     `;
     
