@@ -26,7 +26,7 @@
           <span class="alert-time">{{ formatTime(notification.timestamp) }}</span>
           <div v-if="notification.data" class="alert-details">
             <small><strong>Email ID:</strong> {{ notification.data.id }}</small>
-            <small><strong>Created:</strong> {{ formatTime(notification.data.created_at) }}</small>
+            <small><strong>Created:</strong> {{ formatTime(notification.data.insert_time) }}</small>
           </div>
         </div>
       </div>
