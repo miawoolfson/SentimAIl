@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       isLoading: true,
-      grafanaUrl: 'http://sentimail.cs.colman.ac.il:3000/public-dashboards/16a10e29762c4af9ace225811bc12c75'
+      grafanaUrl: 'http://sentimail.cs.colman.ac.il:3000/public-dashboards/0978ca23712a47cca080d774627886ff'
     }
   },
   methods: {

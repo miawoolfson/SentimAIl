@@ -12,8 +12,10 @@
     </div>
     <div class="user-actions">
       <button class="btn btn-icon" title="Notifications" @click="goToAlerts">
-        <i class="fas fa-bell" :class="{ 'has-notifications': hasUnreadNotifications }"></i>
-        <span v-if="unreadCount > 0" class="notification-badge">{{ unreadCount }}</span>
+        <i class="fas fa-bell"></i>
+      </button>
+      <button class="btn btn-icon" title="Manual Check" @click="checkNow">
+        <i class="fas fa-sync" :class="{ 'fa-spin': isChecking }"></i>
       </button>
       <button class="btn btn-icon" title="Help">
         <i class="fas fa-question-circle"></i>
@@ -26,57 +28,31 @@
 </template>
 
 <script>
+import simpleService from '@/services/superSimpleService'
+
 export default {
   name: 'AppNavbar',
   data() {
     return {
-      hasUnreadNotifications: false,
-      unreadCount: 0,
-      notifications: []
+      isChecking: false
     }
   },
   methods: {
-  goToAlerts() {
-    this.$router.push('/alerts');
-  },
-  checkForNewNotifications() {
-    // Simulate new notifications every 30 seconds
-    this.notificationInterval = setInterval(() => {
-      const newNotification = {
-        id: Date.now(),
-        title: 'New Alert',
-        message: 'This is a simulated alert notification.',
-        timestamp: new Date(),
-        read: false
-      };
-      
-      this.notifications.push(newNotification);
-      this.hasUnreadNotifications = true;
-      this.unreadCount = this.notifications.filter(n => !n.read).length;
-    }, 30000); // 30 seconds
-  }
-  },
-  mounted() {
-    this.checkForNewNotifications();
+    goToAlerts() {
+      this.$router.push('/alerts');
+    },
     
-    // Add initial notification to test
-    setTimeout(() => {
-      const newNotification = {
-        id: Date.now(),
-        title: 'Welcome Alert',
-        message: 'Welcome to the AI Insights Dashboard! This is your first alert.',
-        timestamp: new Date(),
-        read: false
-      };
-      
-      this.notifications.push(newNotification);
-      this.hasUnreadNotifications = true;
-      this.unreadCount = 1;  
-    }, 2000); // 2 seconds after mounting
+    async checkNow() {
+      this.isChecking = true;
+      console.log('🔄 Manual check triggered');
+      await simpleService.checkAndAlert();
+      this.isChecking = false;
+    }
   },
-  beforeUnmount() {
-    // Clear interval when component is destroyed
-    clearInterval(this.notificationInterval);
+  
+  mounted() {
+    console.log('🚀 Starting super simple monitoring');
+    simpleService.start();
   }
 }
 </script>
@@ -165,41 +141,12 @@ export default {
   font-weight: bold;
 }
 
-.notification-badge {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background-color: #E53E3E;
-  color: white;
-  font-size: 0.7rem;
-  min-width: 1.2rem;
-  height: 1.2rem;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 0.25rem;
-  font-weight: bold;
+.fa-spin {
+  animation: spin 1s linear infinite;
 }
 
-.btn-icon {
-  position: relative;
-}
-
-.has-notifications {
-  color: #3366CC !important; /* Dark blue color for notifications */
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
-  100% {
-    opacity: 1;
-  }
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 </style>
