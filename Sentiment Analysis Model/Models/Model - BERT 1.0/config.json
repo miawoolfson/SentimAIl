@@ -1,0 +1,7 @@
+{
+    "DATASET": "Tweets.csv",
+    "MAX_TOKEN_LENGTH": 512,
+    "LEARNING_RATE": 5e-06,
+    "DROPOUT_PROB": 0.4,
+    "MODEL": "bert-base"
+}
