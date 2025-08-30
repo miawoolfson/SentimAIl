@@ -6,6 +6,7 @@ import csv
 import psycopg2
 import os
 import requests
+import argparse 
 
 
 HOST = 'localhost'
@@ -108,7 +109,7 @@ def get_all_users(user_file='./scripts/mails.txt'):
             users.append(email_addr)
     return users
 
-def get_recent_mails(mail):
+def get_recent_mails(mail,time=1):
     typ, data = mail.search(None, 'ALL')  # fetch all messages
     for num in data[0].split():
         # Fetch and parse each message
@@ -127,7 +128,7 @@ def get_recent_mails(mail):
         # Compute how long ago the mail was sent
         delta = time_since(dt)
         # Skip mails older than 2 minutes
-        if delta > timedelta(minutes=10):
+        if delta > timedelta(minutes=time):
             continue
 
         print_mail(msg)
@@ -150,7 +151,7 @@ def add_mail_to_db(msg):
 
         # Insert the email data
         cur.execute("""
-            INSERT INTO emails_etl (sender, recipient, sent_at, subject, body, sentiment_tag, subject_tag)
+            INSERT INTO tagged_mails (sender, recipient, sent_at, subject, body, sentiment_tag, subject_tag)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
         """, (
             msg['From'],
@@ -175,13 +176,19 @@ def add_mail_to_db(msg):
 
 
 def main():
+    # Add argument parsing
+    parser = argparse.ArgumentParser(description='Read emails with configurable time window')
+    parser.add_argument('--time', '-t', type=int, default=1, 
+                       help='Time window in minutes (default: 1)')
+    args = parser.parse_args()
+    
     try:
         users = get_all_users()
         for user in users:
             mail = imaplib.IMAP4(HOST, PORT)
             mail.login(f"{user}*{ADMIN_USER}", ADMIN_PASS)
             mail.select('INBOX')
-            get_recent_mails(mail)
+            get_recent_mails(mail, time=args.time)
             mail.logout()
     except Exception as e:
         print(f"Fatal error: {str(e)}")
