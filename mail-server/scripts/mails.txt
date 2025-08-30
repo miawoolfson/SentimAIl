@@ -14,3 +14,5 @@ try3@sentimail.local:galpass
 try4@sentimail.local:galpass
 try5@sentimail.local:galpass
 try6@sentimail.local:galpass
+alex.levi@sentimail.local:password
+maria.cohen@sentimail.local:password
